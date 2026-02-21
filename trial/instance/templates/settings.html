@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            transition: 0.3s;
+        }
+
+        body.light {
+            background-color: #ffffff;
+            color: #000;
+        }
+
+        .settings-card{
+            max-width: 400px;
+            margin: 80px auto;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .option-btn{
+            display: block;
+            width: 100%;
+            margin: 12px 0;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* toggle theme button */
+        .theme-btn{
+            background: linear-gradient(135deg,#1e88ff,#00c6ff);
+            color: white;
+        }
+
+        .theme-btn:hover{
+            transform: scale(1.05);
+        }
+
+        /* logout button */
+        .logout-btn{
+            background: #ff4d4d;
+            color: white;
+        }
+
+        .logout-btn:hover{
+            background: #e60000;
+        }
+
+        /* back button */
+        .back-btn{
+            background: #555;
+            color: white;
+        }
+
+        .back-btn:hover{
+            background: #333;
+        }
+
+        /* medicine records link */
+        .records-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-decoration: none;
+            color: #1e88ff;
+        }
+
+        .records-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body id="body">
+
+    <div class="settings-card">
+
+        <h2>⚙ Settings</h2>
+
+        <!-- Medicine Records Link -->
+        <a class="records-link" href="{{ url_for('records') }}">📁 Medicine Records</a>
+
+        <!-- Toggle Theme -->
+        <button class="option-btn theme-btn" onclick="toggleTheme()">
+            🌙 Toggle Dark / Light Mode
+        </button>
+
+        <!-- Logout -->
+        <button class="option-btn logout-btn" onclick="location.href='{{ url_for('logout') }}'">
+            🔒 Logout
+        </button>
+
+        <!-- Back to Dashboard -->
+        <button class="option-btn back-btn" onclick="location.href='{{ url_for('dashboard') }}'">
+            ⬅ Back to Dashboard
+        </button>
+
+    </div>
+
+    <script>
+        // Dark / Light Mode Toggle
+        function toggleTheme(){
+            document.body.classList.toggle("light");
+
+            // save preference
+            if(document.body.classList.contains("light")){
+                localStorage.setItem("theme","light");
+            } else {
+                localStorage.setItem("theme","dark");
+            }
+        }
+
+        // load saved theme on page load
+        window.onload = function(){
+            if(localStorage.getItem("theme") === "light"){
+                document.body.classList.add("light");
+            }
+        }
+    </script>
+
+</body>
+</html>

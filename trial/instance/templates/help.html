@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help Center</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+.help-card{
+    max-width:420px;
+    margin:80px auto;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter: blur(15px);
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.help-card p{
+    color:#e3ecff;
+    line-height:1.6;
+}
+
+.contact-box{
+    background:rgba(255,255,255,0.15);
+    padding:12px;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+.back-btn{
+    margin-top:20px;
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:8px;
+    background:linear-gradient(135deg,#1e88ff,#00c6ff);
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.back-btn:hover{
+    transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="help-card">
+
+<h2>🆘 Help Center</h2>
+
+<p>
+Welcome to <strong>PillPal Monitor</strong> support.
+<br><br>
+Use the dashboard to:
+<br>✔ Add medicines
+<br>✔ Track health records
+<br>✔ Set reminders
+<br>✔ Monitor health updates
+</p>
+
+<div class="contact-box">
+📧 Contact Support:<br>
+<strong>UBDT@gmail.com</strong>
+</div>
+
+<a class="back-btn" href="{{ url_for('dashboard') }}">
+⬅ Back to Dashboard
+</a>
+
+</div>
+
+</body>
+</html>

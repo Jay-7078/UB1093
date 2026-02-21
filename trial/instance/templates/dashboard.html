@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>PillPal Monitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#1e3a78;
+            color:white;
+        }
+        .topbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:20px;
+            background:#1a3366;
+        }
+        .container{ padding:20px; }
+        .card{
+            background:#274690;
+            padding:20px;
+            border-radius:12px;
+            margin-bottom:20px;
+        }
+        input,button{ padding:8px; margin:5px; }
+        button{
+            background:#1e88e5;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+        button:hover{ background:#1565c0; }
+        .timer-icon{ cursor:pointer; font-size:22px; }
+        a{ color:#ffd; text-decoration:none; margin-left:10px;}
+        .flash-message{
+            padding:10px 20px;
+            border-radius:8px;
+            margin-bottom:20px;
+            font-weight:bold;
+        }
+        .flash-success{ background:#4caf50; color:white; }
+        .flash-danger{ background:#f44336; color:white; }
+        .flash-warning{ background:#ff9800; color:white; }
+        .flash-info{ background:#2196f3; color:white; }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px;">
+        <h2>PillPal Monitor</h2>
+        <span class="timer-icon" onclick="openTimer()" title="Start Timer">⏱️</span>
+        <span id="countdown"></span>
+    </div>
+
+    <div>
+        <a href="{{ url_for('profile') }}">👤 Profile</a>
+        <a href="{{ url_for('settings') }}">Settings</a>
+        <a href="{{ url_for('help_page') }}">Help</a>
+        <a href="mailto:UBDT@gmail.com">UBDT@gmail.com</a>
+        <a href="{{ url_for('change_password') }}">🔑 Change Password</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message flash-{{ category }}">
+              {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- HEALTH RECOMMENDATION -->
+    <div class="card">
+        <h3>💡 Health Recommendation</h3>
+        <p style="font-size:20px; margin-top:10px;">
+            {{ recommendation }}
+        </p>
+    </div>
+
+    <!-- ADD MEDICINE -->
+    <div class="card">
+        <h3>Add Medicine</h3>
+        <form method="POST" action="{{ url_for('records') }}">
+            <input type="text" name="name" placeholder="Medicine Name" required>
+            <input type="text" name="dosage" placeholder="Dosage" required>
+            <input type="time" name="time" required>
+            <button type="submit">Add</button>
+        </form>
+
+        <ul>
+            {% for med in medicines %}
+            <li>{{ med.name }} - {{ med.time }}
+                <a href="{{ url_for('delete_medicine', id=med.id) }}">❌</a>
+            </li>
+            {% else %}
+            <li>No medicines added yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- ADD HEALTH RECORD -->
+    <div class="card">
+        <h3>Add Health Record</h3>
+        <form method="POST" action="{{ url_for('dashboard') }}">
+            <input type="text" name="bp" placeholder="BP">
+            <input type="text" name="sugar" placeholder="Sugar">
+            <input type="text" name="heart_rate" placeholder="Heart Rate">
+            <input type="text" name="weight" placeholder="Weight">
+            <button type="submit">Add</button>
+        </form>
+
+        <ul>
+            {% for h in health %}
+            <li>
+                BP: {{ h.bp }} | Sugar: {{ h.sugar }} | HR: {{ h.heart_rate }} | Weight: {{ h.weight }}
+                <a href="{{ url_for('delete_health', id=h.id) }}">❌</a>
+            </li>
+            {% else %}
+            <li>No health records yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+<!-- TIMER POPUP -->
+<div id="timerBox" style="display:none;position:fixed;top:40%;left:50%;
+transform:translate(-50%,-50%);
+background:white;color:black;padding:20px;border-radius:10px;text-align:center;">
+    <h3>Set Medicine Timer</h3>
+    <input type="number" id="minutes" placeholder="Minutes">
+    <br><br>
+    <button onclick="startTimer()">Start</button>
+    <button onclick="closeTimer()">Cancel</button>
+</div>
+
+<script>
+let timerInterval;
+
+function openTimer(){
+    document.getElementById("timerBox").style.display="block";
+}
+function closeTimer(){
+    document.getElementById("timerBox").style.display="none";
+}
+
+function startTimer(){
+    let minutes = parseInt(document.getElementById("minutes").value);
+    if(!minutes || minutes <= 0){ alert("Enter valid time"); return; }
+
+    let time = minutes*60;
+    closeTimer();
+
+    timerInterval = setInterval(()=>{
+        let m = Math.floor(time/60);
+        let s = time % 60;
+        document.getElementById("countdown").innerHTML = `⏳ ${m}:${s<10?'0'+s:s}`;
+
+        if(time <= 0){
+            clearInterval(timerInterval);
+            alert("💊 Time to take medicine!");
+            document.getElementById("countdown").innerHTML = "";
+        }
+        time--;
+    },1000);
+}
+</script>
+
+</body>
+</html>

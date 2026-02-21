@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medicine Records</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body{
+            font-family: Arial;
+            background:#1e3a78;
+            color:white;
+            margin:0;
+            padding:0;
+        }
+        .container{
+            max-width:600px;
+            margin:20px auto;
+            background:#274690;
+            padding:20px;
+            border-radius:12px;
+        }
+        input, button{
+            padding:8px;
+            margin:5px;
+        }
+        button{
+            background:#1e88e5;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+        button:hover{
+            background:#1565c0;
+        }
+        a{
+            color:#ffd;
+            text-decoration:none;
+        }
+        .flash-message{
+            padding:10px 15px;
+            margin-bottom:15px;
+            border-radius:8px;
+            font-weight:bold;
+        }
+        .flash-success{ background:#4caf50; color:white; }
+        .flash-danger{ background:#f44336; color:white; }
+        .flash-warning{ background:#ff9800; color:white; }
+        .flash-info{ background:#2196f3; color:white; }
+        ul{ list-style:none; padding-left:0; }
+        li{ margin:8px 0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>💊 Medicine Records</h2>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message flash-{{ category }}">
+              {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- ADD MEDICINE FORM -->
+    <form method="POST">
+        <input type="text" name="name" placeholder="Medicine Name" required>
+        <input type="text" name="dosage" placeholder="Dosage" required>
+        <input type="time" name="time" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <hr>
+
+    <!-- MEDICINE LIST -->
+    <ul>
+        {% for med in medicines %}
+            <li>
+                {{ med.name }} - {{ med.time }}
+                <a href="{{ url_for('delete_medicine', id=med.id) }}">❌</a>
+            </li>
+        {% else %}
+            <li>No records yet.</li>
+        {% endfor %}
+    </ul>
+
+    <br>
+    <a href="{{ url_for('dashboard') }}">⬅ Back to Dashboard</a>
+</div>
+
+</body>
+</html>
